@@ -1,0 +1,293 @@
+<?php
+
+/*
+ * cfdi clase para crear un xml valido para facturacion al sat
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @package    cfdi
+ * @author     Mario Oyorzabal Salgado <tuxsoul@tuxsoul.com>
+ * @copyright  2016
+ * @license    https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU GPL v2
+ *
+ */
+
+class cfdiXML {
+	private $xmlns = array(
+		'cfdi' => 'http://www.sat.gob.mx/cfd/3',
+		'xsi' => array(
+			0 => 'http://www.w3.org/2000/xmlns/',
+			1 => 'http://www.w3.org/2001/XMLSchema-instance',
+		),
+		'location' => 'http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd',
+		'version' => '3.2',
+	);
+
+	private $urlValidadorSAT = 'https://tramitesdigitales.sat.gob.mx/Sicofi.wsExtValidacionCFD/WsValidacionCFDsExt.asmx?WSDL';
+
+	private $xml;
+	private $dom;
+
+	function __construct() {
+		$this->dom = new DOMDocument('1.0','UTF-8');
+
+		// inicia estructura del xml
+		// xmlns:cfdi
+		$nodo = $this->dom->createElementNS($this->xmlns['cfdi'], 'cfdi:Comprobante');
+		$this->xml = $this->dom->appendChild($nodo);
+
+		// xmlns:xsi
+		$this->xml->setAttributeNS($this->xmlns['xsi'][0] ,'xmlns:xsi', $this->xmlns['xsi'][1]);
+
+		// schema:location
+		$this->xml->setAttributeNS($this->xmlns['xsi'][1], 'xsi:schemaLocation', $this->xmlns['cfdi'] . ' ' . $this->xmlns['location']);
+
+		// version
+		$nodo->setAttribute('version', $this->xmlns['version']);
+	}
+
+	// valida el xml con los servicios del SAT
+	function validar() {
+		$cliente = new SOAPClient($this->urlValidadorSAT);
+
+		$parametros = array('xml' => $this->dom->saveXML());
+		$resultado = $cliente->ValidarXmlCFD($parametros);
+
+		var_dump($resultado);
+	}
+
+	// opciones base del cfdi
+	function opciones($datos) {
+		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
+
+		// fecha
+		if(isset($datos['fecha'])) {
+			$fecha = $datos['fecha'];
+		}
+		else {
+			$fecha = date("Y:m:j\TH:i:s");
+		}
+
+		$nodo->setAttribute('fecha', $fecha);
+
+		// serie
+		if(isset($datos['serie'])) {
+			$nodo->setAttribute('serie', $datos['serie']);
+		}
+
+		// formaDePago
+		if(isset($datos['formaDePago'])) {
+			$nodo->setAttribute('formaDePago', $datos['formaDePago']);
+		}
+
+		// metodoDePago
+		if(isset($datos['metodoDePago'])) {
+			$nodo->setAttribute('metodoDePago', $datos['metodoDePago']);
+		}
+
+		// tipoDeComprobante
+		if(isset($datos['tipoDeComprobante'])) {
+			$nodo->setAttribute('tipoDeComprobante', strtolower($datos['tipoDeComprobante']));
+		}
+
+		// folio
+		if(isset($datos['folio'])) {
+			$nodo->setAttribute('folio', $datos['folio']);
+		}
+	}
+
+	// datos de emisor
+	function emisor($datos) {
+		// opcion del comprobante: lugar de expedicion
+		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
+
+		if(isset($datos['localidad']) && isset($datos['estado'])) {
+			$nodo->setAttribute('LugarExpedicion', $datos['localidad'] . ' ' . $datos['estado']);
+		}
+
+		// datos personales del emisor
+		$nodo = $this->dom->createElement('cfdi:Emisor');
+		$this->xml->appendChild($nodo);
+
+		// nombre
+		if(isset($datos['nombre'])) {
+			$nodo->setAttribute('nombre', $datos['nombre']);
+		}
+
+		// rfc
+		if(isset($datos['rfc'])) {
+			$nodo->setAttribute('rfc', $datos['rfc']);
+		}
+
+		// domicilio fiscal
+		$elemento = $this->dom->createElement('cfdi:DomicilioFiscal');
+		$nodo->appendChild($elemento);
+
+		// calle
+		if(isset($datos['calle'])) {
+			$elemento->setAttribute('calle', $datos['calle']);
+		}
+
+		// noInterior
+		if(isset($datos['noInterior'])) {
+			$elemento->setAttribute('noInterior', $datos['noInterior']);
+		}
+
+		// noExterior
+		if(isset($datos['noExterior'])) {
+			$elemento->setAttribute('noExterior', $datos['noExterior']);
+		}
+
+		// colonia
+		if(isset($datos['colonia'])) {
+			$elemento->setAttribute('colonia', $datos['colonia']);
+		}
+
+		// municipio
+		if(isset($datos['municipio'])) {
+			$elemento->setAttribute('municipio', $datos['municipio']);
+		}
+
+		// localidad
+		if(isset($datos['localidad'])) {
+			$elemento->setAttribute('localidad', $datos['localidad']);
+		}
+
+		// estado
+		if(isset($datos['estado'])) {
+			$elemento->setAttribute('estado', $datos['estado']);
+		}
+
+		// pais
+		if(isset($datos['pais'])) {
+			$elemento->setAttribute('pais', $datos['pais']);
+		}
+
+		// codigoPostal
+		if(isset($datos['codigoPostal'])) {
+			$elemento->setAttribute('codigoPostal', $datos['codigoPostal']);
+		}
+
+		// regimen
+		$elemento = $this->dom->createElement('cfdi:RegimenFiscal');
+		$nodo->appendChild($elemento);
+
+		if(isset($datos['regimen'])) {
+			$elemento->setAttribute('Regimen', $datos['regimen']);
+		}
+	}
+
+	// datos de receptor
+	function receptor($datos) {
+		// datos personales del receptor
+		$nodo = $this->dom->createElement('cfdi:Receptor');
+		$this->xml->appendChild($nodo);
+
+		// nombre
+		if(isset($datos['nombre'])) {
+			$nodo->setAttribute('nombre', $datos['nombre']);
+		}
+
+		// rfc
+		if(isset($datos['rfc'])) {
+			$nodo->setAttribute('rfc', $datos['rfc']);
+		}
+
+		// domicilio
+		$elemento = $this->dom->createElement('cfdi:Domicilio');
+		$nodo->appendChild($elemento);
+
+		// calle
+		if(isset($datos['calle'])) {
+			$elemento->setAttribute('calle', $datos['calle']);
+		}
+
+		// noInterior
+		if(isset($datos['noInterior'])) {
+			$elemento->setAttribute('noInterior', $datos['noInterior']);
+		}
+
+		// noExterior
+		if(isset($datos['noExterior'])) {
+			$elemento->setAttribute('noExterior', $datos['noExterior']);
+		}
+
+		// colonia
+		if(isset($datos['colonia'])) {
+			$elemento->setAttribute('colonia', $datos['colonia']);
+		}
+
+		// municipio
+		if(isset($datos['municipio'])) {
+			$elemento->setAttribute('municipio', $datos['municipio']);
+		}
+
+		// localidad
+		if(isset($datos['localidad'])) {
+			$elemento->setAttribute('localidad', $datos['localidad']);
+		}
+
+		// estado
+		if(isset($datos['estado'])) {
+			$elemento->setAttribute('estado', $datos['estado']);
+		}
+
+		// pais
+		if(isset($datos['pais'])) {
+			$elemento->setAttribute('pais', $datos['pais']);
+		}
+
+		// codigoPostal
+		if(isset($datos['codigoPostal'])) {
+			$elemento->setAttribute('codigoPostal', $datos['codigoPostal']);
+		}
+	}
+
+	// datos de conceptos
+	function conceptos($datos) {
+		// datos de los conceptos
+		$nodo = $this->dom->createElement('cfdi:Conceptos');
+		$this->xml->appendChild($nodo);
+	}
+
+	// datos de impuestos
+	function impuestos($datos) {
+		// datos de impuestos
+		$nodo = $this->dom->createElement('cfdi:Impuestos');
+		$this->xml->appendChild($nodo);
+	}
+
+	// regresa el xml creado de la factura
+	function xmlFactura($emisor, $receptor, $conceptos, $impuestos, $opciones) {
+		$this->opciones($opciones);
+
+		$this->emisor($emisor);
+		$this->receptor($receptor);
+		$this->conceptos($conceptos);
+		$this->impuestos($impuestos);
+
+		return $this->dom->saveXML();
+	}
+}
+
+
+// datos de prueba
+include "config.php";
+
+$xml = new cfdiXML();
+echo $xml->xmlFactura($emisor, $receptor, $emisor, $emisor, $opciones);
+//$xml->validar();
+
+?>
