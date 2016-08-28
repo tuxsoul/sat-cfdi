@@ -282,12 +282,4 @@ class cfdiXML {
 	}
 }
 
-
-// datos de prueba
-include "config.php";
-
-$xml = new cfdiXML();
-echo $xml->xmlFactura($emisor, $receptor, $emisor, $emisor, $opciones);
-//$xml->validar();
-
 ?>
