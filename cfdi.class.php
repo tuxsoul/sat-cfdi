@@ -17,14 +17,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @package    cfdi
+ * @package    satCfdi
  * @author     Mario Oyorzabal Salgado <tuxsoul@tuxsoul.com>
  * @copyright  2016
  * @license    https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU GPL v2
  *
  */
 
-class cfdiXML {
+class satCfdi {
 	private $xmlns = array(
 		'cfdi' => 'http://www.sat.gob.mx/cfd/3',
 		'xsi' => array(
@@ -35,15 +35,29 @@ class cfdiXML {
 		'version' => '3.2',
 	);
 
-	private $urlValidadorSAT = 'https://tramitesdigitales.sat.gob.mx/Sicofi.wsExtValidacionCFD/WsValidacionCFDsExt.asmx?WSDL';
+	private $emisor;
+	private $receptor;
+	private $conceptos;
+	private $impuestos;
+	private $opciones;
+
+	private $comprobantes;
 
 	private $xml;
 	private $dom;
 
-	function __construct() {
-		$this->dom = new DOMDocument('1.0','UTF-8');
+	function __construct($comprobantes, $emisor, $receptor, $conceptos, $impuestos, $opciones) {
+		$this->emisor = $emisor;
+		$this->receptor = $receptor;
+		$this->conceptos = $conceptos;
+		$this->impuestos = $impuestos;
+		$this->opciones = $opciones;
+
+		$this->comprobantes = $comprobantes;
 
 		// inicia estructura del xml
+		$this->dom = new DOMDocument('1.0','UTF-8');
+
 		// xmlns:cfdi
 		$nodo = $this->dom->createElementNS($this->xmlns['cfdi'], 'cfdi:Comprobante');
 		$this->xml = $this->dom->appendChild($nodo);
@@ -58,21 +72,41 @@ class cfdiXML {
 		$nodo->setAttribute('version', $this->xmlns['version']);
 	}
 
-	// valida el xml con los servicios del SAT
-	function validar() {
-		$cliente = new SOAPClient($this->urlValidadorSAT);
+	// informacion del certificado (certificado, noCertificado)
+	private function comprobante() {
+		// agrega certificado: el comprobante en formato (.pem) en base64
+		$datos = $this->comprobantes;
+		$archivo = $datos . $this->emisor['rfc'] . '.cer';
 
-		$parametros = array('xml' => $this->dom->saveXML());
-		$resultado = $cliente->ValidarXmlCFD($parametros);
+		if(file_exists($archivo)) {
+			$certificado = file_get_contents($archivo);
+			$pem = base64_encode($certificado);
 
-		var_dump($resultado);
+			$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
+			$nodo->setAttribute('certificado', $pem);
+		}
+
+		// agrega noCertificado, se necesita de phplibsec
+		@require_once ('Math/BigInteger.php');
+		@require_once ('File/ASN1.php');
+		@require_once ('File/X509.php');
+
+		if(class_exists('File_X509')) {
+			$x509 = new File_X509();
+			$cert = $x509->loadX509(file_get_contents($archivo));
+			$serialNumber = hex2bin($cert['tbsCertificate']['serialNumber']->toHex());
+
+			$nodo->setAttribute('noCertificado', $serialNumber);
+		}
 	}
 
 	// opciones base del cfdi
-	function opciones($datos) {
+	private function opciones() {
+		$datos = $this->opciones;
 		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
 
-		// fecha
+		// fecha actual del sistema
+		date_default_timezone_set('America/Mexico_City');
 		if(isset($datos['fecha'])) {
 			$fecha = $datos['fecha'];
 		}
@@ -83,7 +117,7 @@ class cfdiXML {
 		$nodo->setAttribute('fecha', $fecha);
 
 		// serie
-		if(isset($datos['serie'])) {
+		if(isset($datos['serie']) && !empty($datos['serie'])) {
 			$nodo->setAttribute('serie', $datos['serie']);
 		}
 
@@ -97,25 +131,26 @@ class cfdiXML {
 			$nodo->setAttribute('metodoDePago', $datos['metodoDePago']);
 		}
 
+		// LugarExpedicion
+		if(isset($this->emisor['localidad']) && isset($this->emisor['estado'])) {
+			$nodo->setAttribute('LugarExpedicion',
+								$this->emisor['localidad'] . ' ' . $this->emisor['estado']);
+		}
+
 		// tipoDeComprobante
 		if(isset($datos['tipoDeComprobante'])) {
 			$nodo->setAttribute('tipoDeComprobante', strtolower($datos['tipoDeComprobante']));
 		}
 
 		// folio
-		if(isset($datos['folio'])) {
+		if(isset($datos['folio']) && !empty($datos['folio'])) {
 			$nodo->setAttribute('folio', $datos['folio']);
 		}
 	}
 
 	// datos de emisor
-	function emisor($datos) {
-		// opcion del comprobante: lugar de expedicion
-		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
-
-		if(isset($datos['localidad']) && isset($datos['estado'])) {
-			$nodo->setAttribute('LugarExpedicion', $datos['localidad'] . ' ' . $datos['estado']);
-		}
+	private function emisor() {
+		$datos = $this->emisor;
 
 		// datos personales del emisor
 		$nodo = $this->dom->createElement('cfdi:Emisor');
@@ -190,7 +225,9 @@ class cfdiXML {
 	}
 
 	// datos de receptor
-	function receptor($datos) {
+	private function receptor() {
+		$datos = $this->receptor;
+
 		// datos personales del receptor
 		$nodo = $this->dom->createElement('cfdi:Receptor');
 		$this->xml->appendChild($nodo);
@@ -256,28 +293,37 @@ class cfdiXML {
 	}
 
 	// datos de conceptos
-	function conceptos($datos) {
+	private function conceptos() {
+		$datos = $this->conceptos;
+
 		// datos de los conceptos
 		$nodo = $this->dom->createElement('cfdi:Conceptos');
 		$this->xml->appendChild($nodo);
 	}
 
 	// datos de impuestos
-	function impuestos($datos) {
+	private function impuestos() {
+		$datos = $this->impuestos;
+
 		// datos de impuestos
 		$nodo = $this->dom->createElement('cfdi:Impuestos');
 		$this->xml->appendChild($nodo);
 	}
 
-	// regresa el xml creado de la factura
-	function xmlFactura($emisor, $receptor, $conceptos, $impuestos, $opciones) {
-		$this->opciones($opciones);
+	// introduce los datos en el xml
+	public function crear() {
+		$this->opciones();
 
-		$this->emisor($emisor);
-		$this->receptor($receptor);
-		$this->conceptos($conceptos);
-		$this->impuestos($impuestos);
+		$this->emisor();
+		$this->receptor();
+		$this->conceptos();
+		$this->impuestos();
 
+		$this->comprobante();
+	}
+
+	// regresa el xml para ser mostrado
+	public function xml() {
 		return $this->dom->saveXML();
 	}
 }
