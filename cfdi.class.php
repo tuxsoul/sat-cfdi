@@ -305,6 +305,11 @@ class satCfdi {
 	private function impuestos() {
 		$datos = $this->impuestos;
 
+		// se agregan subtotal y total en el nodo Comprobante
+		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
+		$nodo->setAttribute('subTotal', $datos['subTotal']);
+		$nodo->setAttribute('total', $datos['total']);
+
 		// datos de impuestos
 		$nodo = $this->dom->createElement('cfdi:Impuestos');
 		$this->xml->appendChild($nodo);
