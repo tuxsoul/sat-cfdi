@@ -111,7 +111,7 @@ class satCfdi {
 			$fecha = $datos['fecha'];
 		}
 		else {
-			$fecha = date("Y:m:j\TH:i:s");
+			$fecha = date("Y-m-j\TH:i:s");
 		}
 
 		$nodo->setAttribute('fecha', $fecha);
