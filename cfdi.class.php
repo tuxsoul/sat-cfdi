@@ -310,6 +310,21 @@ class satCfdi {
 		$this->xml->appendChild($nodo);
 	}
 
+	// regresa la cadena original
+	public function cadenaOriginal() {
+		$xml = $this->dom->saveXML();
+
+		$xslt = new DOMDocument();
+		$xslt->load(dirname(__FILE__) . '/xslt/cadenaoriginal_3_2.xslt');
+
+		$xsltProcesador = new XSLTProcessor;
+		$xsltProcesador->importStyleSheet($xslt);
+
+		$cadenaOriginal = $xsltProcesador->transformToXML($xml);
+
+		return $cadenaOriginal;
+	}
+
 	// introduce los datos en el xml
 	public function crear() {
 		$this->opciones();

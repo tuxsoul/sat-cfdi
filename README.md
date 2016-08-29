@@ -2,4 +2,5 @@
 
 ## Requisitos
 - php5
-- phpseclib (puede instalarse via apt-get)
+- php5-seclib (phpseclib)
+- php5-xsl
