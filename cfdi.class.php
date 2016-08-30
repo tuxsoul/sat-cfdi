@@ -307,9 +307,9 @@ class satCfdi {
 
 			$elemento->setAttribute('descripcion', $concepto['descripcion']);
 			$elemento->setAttribute('unidad', $concepto['unidad']);
-			$elemento->setAttribute('cantidad', $concepto['cantidad']);
-			$elemento->setAttribute('valor', $concepto['valor']);
-			$elemento->setAttribute('importe', $concepto['importe']);
+			$elemento->setAttribute('cantidad', str_replace(',', '', $concepto['cantidad']));
+			$elemento->setAttribute('valorUnitario', str_replace(',', '', $concepto['valorUnitario']));
+			$elemento->setAttribute('importe', str_replace(',', '', $concepto['importe']));
 
 			unset($elemento);
 		}
@@ -321,8 +321,8 @@ class satCfdi {
 
 		// se agregan subtotal y total en el nodo Comprobante
 		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
-		$nodo->setAttribute('subTotal', $datos['subTotal']);
-		$nodo->setAttribute('total', $datos['total']);
+		$nodo->setAttribute('subTotal', str_replace(',', '', $datos['subTotal']));
+		$nodo->setAttribute('total', str_replace(',', '', $datos['total']));
 
 		// datos de impuestos
 		$nodo = $this->dom->createElement('cfdi:Impuestos');
