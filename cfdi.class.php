@@ -299,6 +299,20 @@ class satCfdi {
 		// datos de los conceptos
 		$nodo = $this->dom->createElement('cfdi:Conceptos');
 		$this->xml->appendChild($nodo);
+
+		//agrega cada concepto
+		foreach($datos as $concepto) {
+			$elemento = $this->dom->createElement('cfdi:Concepto');
+			$nodo->appendChild($elemento);
+
+			$elemento->setAttribute('descripcion', $concepto['descripcion']);
+			$elemento->setAttribute('unidad', $concepto['unidad']);
+			$elemento->setAttribute('cantidad', $concepto['cantidad']);
+			$elemento->setAttribute('valor', $concepto['valor']);
+			$elemento->setAttribute('importe', $concepto['importe']);
+
+			unset($elemento);
+		}
 	}
 
 	// datos de impuestos
