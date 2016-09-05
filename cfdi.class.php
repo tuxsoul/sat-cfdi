@@ -24,6 +24,15 @@
  *
  */
 
+// phpseclib
+@require_once ('Math/BigInteger.php');
+@require_once ('Crypt/Hash.php');
+@require_once ('Crypt/RSA.php');
+@require_once ('File/X509.php');
+
+// establece la zona horaria
+date_default_timezone_set('America/Mexico_City');
+
 class satCfdi {
 	private $xmlns = array(
 		'cfdi' => 'http://www.sat.gob.mx/cfd/3',
@@ -45,6 +54,10 @@ class satCfdi {
 
 	private $xml;
 	private $dom;
+
+	public $fechaEmision;
+	public $numeroCertificado;
+
 
 	function __construct($comprobantes, $emisor, $receptor, $conceptos, $impuestos, $opciones) {
 		$this->emisor = $emisor;
@@ -72,7 +85,7 @@ class satCfdi {
 		$nodo->setAttribute('version', $this->xmlns['version']);
 	}
 
-	// informacion del certificado (certificado, noCertificado)
+	// informacion del certificado (certificado en base64, noCertificado)
 	private function comprobante() {
 		// agrega certificado: el comprobante en formato (.pem) en base64
 		$datos = $this->comprobantes;
@@ -86,17 +99,14 @@ class satCfdi {
 			$nodo->setAttribute('certificado', $pem);
 		}
 
-		// agrega noCertificado, se necesita de phplibsec
-		@require_once ('Math/BigInteger.php');
-		@require_once ('File/ASN1.php');
-		@require_once ('File/X509.php');
-
+		// agrega noCertificado
 		if(class_exists('File_X509')) {
 			$x509 = new File_X509();
 			$cert = $x509->loadX509(file_get_contents($archivo));
-			$serialNumber = hex2bin($cert['tbsCertificate']['serialNumber']->toHex());
+			$serie = hex2bin($cert['tbsCertificate']['serialNumber']->toHex());
 
-			$nodo->setAttribute('noCertificado', $serialNumber);
+			$nodo->setAttribute('noCertificado', $serie);
+			$this->numeroCertificado = $serie;
 		}
 	}
 
@@ -106,15 +116,16 @@ class satCfdi {
 		$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
 
 		// fecha actual del sistema
-		date_default_timezone_set('America/Mexico_City');
 		if(isset($datos['fecha'])) {
-			$fecha = $datos['fecha'];
+			$fecha = strtotime($datos['fecha']);
 		}
 		else {
-			$fecha = date("Y-m-j\TH:i:s");
+			$fecha = time();
 		}
 
+		$fecha = date("Y-m-j\TH:i:s", $fecha - 5);
 		$nodo->setAttribute('fecha', $fecha);
+		$this->fechaEmision = $fecha;
 
 		// serie
 		if(isset($datos['serie']) && !empty($datos['serie'])) {
@@ -327,21 +338,58 @@ class satCfdi {
 		// datos de impuestos
 		$nodo = $this->dom->createElement('cfdi:Impuestos');
 		$this->xml->appendChild($nodo);
+
+		$nodo->setAttribute('totalImpuestosTrasladados', '0.00');
+
+		$trasladados = $this->dom->createElement('cfdi:Traslados');
+		$nodo->appendChild($trasladados);
+
+		$impuesto = $this->dom->createElement('cfdi:Traslado');
+		$trasladados->appendChild($impuesto);
+
+		$impuesto->setAttribute('impuesto', 'IVA');
+		$impuesto->setAttribute('importe', '0.00');
+		$impuesto->setAttribute('tasa', '0.00');
+	}
+
+	// crea el sello de la facturacion
+	public function sello() {
+		$datos = $this->comprobantes;
+		$archivo = $datos . $this->emisor['rfc'] . '.key.pem';
+
+		if(class_exists('Crypt_RSA')) {
+			if(file_exists($archivo)) {
+				$cadenaOriginal = $this->cadenaOriginal();
+
+				$rsa = new Crypt_RSA();
+				//$rsa->setPassword('12345678a');
+				$comprobanteKey = file_get_contents($archivo);
+				$rsa->loadKey($comprobanteKey);
+
+				$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+				$sello = $rsa->sign($cadenaOriginal);
+
+				$nodo = $this->dom->getElementsByTagName('Comprobante')->item(0);
+				$nodo->setAttribute('sello', base64_encode($sello));
+			}
+		}
 	}
 
 	// regresa la cadena original
 	public function cadenaOriginal() {
-		$xml = $this->xml;
+		$xml = $this->dom->saveXML();
+
+		$factura = new DOMDocument();
+		$factura->loadXML($xml);
 
 		$xslt = new DOMDocument();
 		$xslt->load(dirname(__FILE__) . '/xslt/cadenaoriginal_3_2.xslt');
-		$xslt->documentURI = dirname(__FILE__) . '/xslt/';
+		//$xslt->documentURI = dirname(__FILE__) . '/xslt/';
 
 		$xsltProcesador = new XSLTProcessor;
 		$xsltProcesador->importStyleSheet($xslt);
 
-		$cadenaOriginal = $xsltProcesador->transformToXML($xml);
-
+		$cadenaOriginal = $xsltProcesador->transformToXML($factura);
 		return $cadenaOriginal;
 	}
 
@@ -355,6 +403,8 @@ class satCfdi {
 		$this->impuestos();
 
 		$this->comprobante();
+
+		$this->sello();
 	}
 
 	// regresa el xml para ser mostrado
