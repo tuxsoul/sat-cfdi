@@ -125,7 +125,7 @@ class satCfdi {
 
 		// es necesario quitar tiempo, para el campo fechaEmision al parecer los
 		// servidores del SAT no son tan precisos, se le restan 2 minutos al tiempo
-		$fecha = date("Y-m-j\TH:i:s", $fecha - 160);
+		$fecha = date("Y-m-d\TH:i:s", $fecha - 160);
 
 		$nodo->setAttribute('fecha', $fecha);
 		$this->fechaEmision = $fecha;
