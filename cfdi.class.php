@@ -1,7 +1,6 @@
 <?php
 
 /*
- * cfdi clase para crear un xml valido para facturacion al sat
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @package    satCfdi
+ * @package    sat-cfdi
  * @author     Mario Oyorzabal Salgado <tuxsoul@tuxsoul.com>
  * @copyright  2016
  * @license    https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU GPL v2
