@@ -8,7 +8,7 @@ probado con php5.
 Primero es necesario crear una instancia de sat-cfdi.
 
 ```php
-include ruta_clase/cfdi.class.php;
+include 'ruta_clase/cfdi.class.php';
 
 $factura = new satCfdi();
 $resultado = $factura->crear();

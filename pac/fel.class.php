@@ -23,7 +23,7 @@
  *
  */
 
-include base.class.php;
+include 'base.class.php';
 
 class fel extends base {
 	function __construct() {
