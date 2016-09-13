@@ -23,7 +23,8 @@
  *
  */
 
-class base {
+class pac {
+	private $conexion;
 	private $urlWebService = null;
 
 	function __construct() {

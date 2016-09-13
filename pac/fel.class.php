@@ -23,9 +23,9 @@
  *
  */
 
-include 'base.class.php';
+include 'pac.class.php';
 
-class fel extends base {
+class fel extends pac {
 	function __construct() {
 		$this->urlWebService = "https://timbrado.facturarenlinea.com/WSTFD.svc?wsdl";
 	}
