@@ -1,10 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:cce="http://www.sat.gob.mx/ComercioExterior">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:cce11="http://www.sat.gob.mx/ComercioExterior11">
 
-  <xsl:template match="cce:ComercioExterior"> 
+  <xsl:template match="cce11:ComercioExterior">
     <!--Manejador de nodos tipo ComercioExterior-->
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@Version" />
+    </xsl:call-template>
+    <xsl:call-template name="Opcional">
+      <xsl:with-param name="valor" select="./@MotivoTraslado" />
     </xsl:call-template>
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@TipoOperacion" />
@@ -38,61 +41,72 @@
     </xsl:call-template>
 
     <!--  Iniciamos el manejo de los elementos hijo en la secuencia -->
-    <xsl:apply-templates select="./cce:Emisor" />
-    <xsl:apply-templates select="./cce:Receptor" />
-    <xsl:apply-templates select="./cce:Destinatario" />
-    <xsl:apply-templates select="./cce:Mercancias" />
+    <xsl:apply-templates select="./cce11:Emisor" />
+    <xsl:for-each select="./cce11:Propietario">
+      <xsl:apply-templates select="."/>
+    </xsl:for-each>
+    <xsl:apply-templates select="./cce11:Receptor" />
+    <xsl:for-each select="./cce11:Destinatario">
+      <xsl:apply-templates select="."/>
+    </xsl:for-each>
+    <xsl:apply-templates select="./cce11:Mercancias" />
   </xsl:template>
 
-
-  <xsl:template match="cce:Emisor">
-    <!--  Iniciamos el tratamiento de los atributos de cce:Emisor-->
+  <xsl:template match="cce11:Emisor">
+    <!--  Iniciamos el tratamiento de los atributos de cce11:Emisor-->
     <xsl:call-template name="Opcional">
       <xsl:with-param name="valor" select="./@Curp" />
     </xsl:call-template>
+
+    <xsl:apply-templates select="./cce11:Domicilio" />
+
   </xsl:template>
 
-  
-  <xsl:template match="cce:Receptor">
-    <!--  Tratamiento de los atributos de cce:Receptor-->
-    <xsl:call-template name="Opcional">
-      <xsl:with-param name="valor" select="./@Curp" />
-    </xsl:call-template>
+  <xsl:template match="cce11:Propietario">
+    <!--  Tratamiento de los atributos de cce11:Propietario-->
+    
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@NumRegIdTrib" />
     </xsl:call-template>
+    <xsl:call-template name="Requerido">
+      <xsl:with-param name="valor" select="./@ResidenciaFiscal" />
+    </xsl:call-template>
+
   </xsl:template>
 
-
-  <xsl:template match="cce:Destinatario">
-    <!--  Tratamiento de los atributos de cce:Destinatario-->
+  <xsl:template match="cce11:Receptor">
+    <!--  Tratamiento de los atributos de cce11:Receptor-->
+    
     <xsl:call-template name="Opcional">
       <xsl:with-param name="valor" select="./@NumRegIdTrib" />
     </xsl:call-template>
+    <xsl:apply-templates select="./cce11:Domicilio" />
+
+  </xsl:template>
+
+  <xsl:template match="cce11:Destinatario">
+    <!--  Tratamiento de los atributos de cce11:Destinatario-->
     <xsl:call-template name="Opcional">
-      <xsl:with-param name="valor" select="./@Rfc" />
-    </xsl:call-template>
-    <xsl:call-template name="Opcional">
-      <xsl:with-param name="valor" select="./@Curp" />
+      <xsl:with-param name="valor" select="./@NumRegIdTrib" />
     </xsl:call-template>
     <xsl:call-template name="Opcional">
       <xsl:with-param name="valor" select="./@Nombre" />
     </xsl:call-template>
     <!--  Manejo de los nodos dependientes -->
-    <xsl:apply-templates select="./cce:Domicilio" />
- </xsl:template>
-
-
-  <xsl:template match="cce:Mercancias">
-    <!--  Iniciamos el manejo de los nodos dependientes -->
-    <xsl:for-each select="./cce:Mercancia">
+    <xsl:for-each select="./cce11:Domicilio">
       <xsl:apply-templates select="."/>
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:template match="cce11:Mercancias">
+   <!--  Iniciamos el manejo de los nodos dependientes -->
+    <xsl:for-each select="./cce11:Mercancia">
+      <xsl:apply-templates select="."/>
+    </xsl:for-each>
+  </xsl:template>
 
-  <xsl:template match="cce:Domicilio">
-    <!--  Iniciamos el tratamiento de los atributos de cce:Domicilio-->
+  <xsl:template match="cce11:Domicilio">
+    <!--  Iniciamos el tratamiento de los atributos de cce11:Domicilio-->
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@Calle" />
     </xsl:call-template>
@@ -125,8 +139,7 @@
     </xsl:call-template>
   </xsl:template>
 
-  
-  <xsl:template match="cce:Mercancia">
+  <xsl:template match="cce11:Mercancia">
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@NoIdentificacion" />
     </xsl:call-template>
@@ -145,18 +158,13 @@
     <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@ValorDolares" />
     </xsl:call-template>
-
-    <!--  Manejo de los nodos dependientes -->
-    <xsl:for-each select="./cce:DescripcionesEspecificas">
+	 <xsl:for-each select="./cce11:DescripcionesEspecificas">
       <xsl:apply-templates select="."/>
     </xsl:for-each>
-
   </xsl:template>
 
-
-  <xsl:template match="cce:DescripcionesEspecificas">
-    <!--  Iniciamos el tratamiento de los atributos de cce:descripcionesEspecificas-->
-    <xsl:call-template name="Requerido">
+    <xsl:template match="cce11:DescripcionesEspecificas">
+      <xsl:call-template name="Requerido">
       <xsl:with-param name="valor" select="./@Marca" />
     </xsl:call-template>
     <xsl:call-template name="Opcional">
@@ -169,7 +177,5 @@
       <xsl:with-param name="valor" select="./@NumeroSerie" />
     </xsl:call-template>
   </xsl:template>
-
-
 
 </xsl:stylesheet>
