@@ -179,55 +179,6 @@ class satCfdi {
 			$nodo->setAttribute('rfc', $datos['rfc']);
 		}
 
-		// domicilio fiscal
-		$elemento = $this->dom->createElement('cfdi:DomicilioFiscal');
-		$nodo->appendChild($elemento);
-
-		// calle
-		if(isset($datos['calle'])) {
-			$elemento->setAttribute('calle', $datos['calle']);
-		}
-
-		// noInterior
-		if(isset($datos['noInterior'])) {
-			$elemento->setAttribute('noInterior', $datos['noInterior']);
-		}
-
-		// noExterior
-		if(isset($datos['noExterior'])) {
-			$elemento->setAttribute('noExterior', $datos['noExterior']);
-		}
-
-		// colonia
-		if(isset($datos['colonia'])) {
-			$elemento->setAttribute('colonia', $datos['colonia']);
-		}
-
-		// municipio
-		if(isset($datos['municipio'])) {
-			$elemento->setAttribute('municipio', $datos['municipio']);
-		}
-
-		// localidad
-		if(isset($datos['localidad'])) {
-			$elemento->setAttribute('localidad', $datos['localidad']);
-		}
-
-		// estado
-		if(isset($datos['estado'])) {
-			$elemento->setAttribute('estado', $datos['estado']);
-		}
-
-		// pais
-		if(isset($datos['pais'])) {
-			$elemento->setAttribute('pais', $datos['pais']);
-		}
-
-		// codigoPostal
-		if(isset($datos['codigoPostal'])) {
-			$elemento->setAttribute('codigoPostal', $datos['codigoPostal']);
-		}
-
 		// regimen
 		$elemento = $this->dom->createElement('cfdi:RegimenFiscal');
 		$nodo->appendChild($elemento);
