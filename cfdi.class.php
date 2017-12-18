@@ -385,7 +385,7 @@ class satCfdi {
 		$factura->loadXML($xml);
 
 		$xslt = new DOMDocument();
-		$xslt->load(dirname(__FILE__) . '/xslt/cadenaoriginal_3_2.xslt');
+		$xslt->load(dirname(__FILE__) . '/xslt/cadenaoriginal_3_3.xslt');
 		//$xslt->documentURI = dirname(__FILE__) . '/xslt/';
 
 		$xsltProcesador = new XSLTProcessor;

@@ -9,7 +9,6 @@ UNIQ="/usr/bin/uniq"
 SED="/bin/sed"
 RM="/bin/rm"
 
-CADENA32="cadenaoriginal_3_2.xslt"
 CADENA33="cadenaoriginal_3_3.xslt"
 TEMP="temp.txt"
 
@@ -19,7 +18,6 @@ $RM *.xslt
 
 # descargamos los archivos principales
 echo "-- Descargando nuevos archivos principales ..."
-$WGET -q http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/$CADENA32
 $WGET -q http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_3/$CADENA33
 
 echo "-- Descargando archivos xslt adicionales ..."
@@ -38,7 +36,6 @@ $SED -i -e 's/<xsl:stylesheet version="2.0"/<xsl:stylesheet version="1.0"/g' *.x
 
 # cambiamos includes de archivos principales, a forma local
 echo "-- Editando archivos principales para carga local de archivos adicionales ..."
-$SED -i -e 's/http:\/\/www.sat.gob.mx\/sitio_internet\/cfd\/\(.*\)\/\(.*\).xslt/\2.xslt/g' $CADENA32
 $SED -i -e 's/http:\/\/www.sat.gob.mx\/sitio_internet\/cfd\/\(.*\)\/\(.*\).xslt/\2.xslt/g' $CADENA33
 
 echo "-- Fin ;) ..."
