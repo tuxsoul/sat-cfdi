@@ -266,6 +266,7 @@ class satCfdi {
 				$cadenaOriginal = $this->cadenaOriginal();
 
 				$rsa = new Crypt_RSA();
+				$rsa->setHash('sha256');
 				//$rsa->setPassword('12345678a');
 				$comprobanteKey = file_get_contents($archivo);
 				$rsa->loadKey($comprobanteKey);
