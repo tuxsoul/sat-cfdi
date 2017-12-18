@@ -57,7 +57,6 @@ class satCfdi {
 	public $fechaEmision;
 	public $numeroCertificado;
 
-
 	function __construct($comprobantes, $emisor, $receptor, $conceptos, $impuestos, $opciones) {
 		$this->emisor = $emisor;
 		$this->receptor = $receptor;
