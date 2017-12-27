@@ -453,7 +453,7 @@
 "C73","Picohenry",01/01/2017,,2,0
 "C74","Kilobits por segundo",01/01/2017,,2,0
 "C75","Picowatt",01/01/2017,,2,0
-"C76","Picowatt  por metro cuadrado",01/01/2017,,2,0
+"C76","Picowatt por metro cuadrado",01/01/2017,,2,0
 "C77","Calibre de libra",13/08/2017,,2,0
 "C78","Libra fuerza",01/01/2017,,2,0
 "C79","Kilovoltios horas amperios",01/01/2017,,2,0
@@ -1510,7 +1510,7 @@
 "M4","Valor monetario",01/01/2017,,2,0
 "M40","Yarda por segundo cuadrado",01/01/2017,,2,0
 "M41","Milímetro por segundo cuadrado",01/01/2017,,2,0
-"M42","Milla (milla estatal)  por segundo cuadrado",01/01/2017,,2,0
+"M42","Milla (milla estatal) por segundo cuadrado",01/01/2017,,2,0
 "M43","Mil (unidad de Medida Militar)",01/01/2017,,2,0
 "M44","Revolución",01/01/2017,,2,0
 "M45","Grado por segundo cuadrado",01/01/2017,,2,0
@@ -2045,7 +2045,7 @@
 "X44","Bolsa de plastico",13/08/2017,,2,0
 "X4A","Caja de acero",13/08/2017,,2,0
 "X4B","Caja de aluminio",13/08/2017,,2,0
-"X4C","Caja de  madera natural",13/08/2017,,2,0
+"X4C","Caja de madera natural",13/08/2017,,2,0
 "X4D","Caja de contrachapado",13/08/2017,,2,0
 "X4F","Caja de madera reconstituida",13/08/2017,,2,0
 "X4G","Caja de cartón",13/08/2017,,2,0
@@ -2060,12 +2060,12 @@
 "X8A","Pallet de madera",13/08/2017,,2,0
 "X8B","Cajón de madera",13/08/2017,,2,0
 "X8C","Madera flejada",13/08/2017,,2,0
-"XAA","Contenedor intermedio  para gráneles de plástico rígido",13/08/2017,,2,0
+"XAA","Contenedor intermedio para gráneles de plástico rígido",13/08/2017,,2,0
 "XAB","Contenedor de fibra",13/08/2017,,2,0
 "XAC","Contenedor de papel",13/08/2017,,2,0
 "XAD","Contenedor de madera",13/08/2017,,2,0
 "XAE","Aerosol",13/08/2017,,2,0
-"XAF","Pallet modular con collares,  80cms * 60cms",13/08/2017,,2,0
+"XAF","Pallet modular con collares, 80cms * 60cms",13/08/2017,,2,0
 "XAG","Pallet o empaquetado",13/08/2017,,2,0
 "XAH","Pallet, 100cms X 110cms",13/08/2017,,2,0
 "XAI","Contenedor tipo concha",13/08/2017,,2,0
@@ -2143,7 +2143,7 @@
 "XDR","Tambor",13/08/2017,,2,0
 "XDS","Bandeja de una capa sin cubierta y de plástico",13/08/2017,,2,0
 "XDT","Bandeja de una capa sin cubierta y de madera",13/08/2017,,2,0
-"XDU","Bandeja de una capa sin cubierta y  poliestireno",13/08/2017,,2,0
+"XDU","Bandeja de una capa sin cubierta y poliestireno",13/08/2017,,2,0
 "XDV","Bandeja de una capa sin cubierta y de cartón",13/08/2017,,2,0
 "XDW","Bandeja de dos capas sin tapa y con bandeja de plástico",13/08/2017,,2,0
 "XDX","Bandeja de dos capas sin cubierta y de madera",13/08/2017,,2,0
@@ -2177,12 +2177,12 @@
 "XGZ","Vigas con correas o agrupadas",13/08/2017,,2,0
 "XHA","Cesta con mango y de plástico",13/08/2017,,2,0
 "XHB","Cesta con mango y de madera",13/08/2017,,2,0
-"XHC","Cesta  con asa y de  cartón",13/08/2017,,2,0
+"XHC","Cesta con asa y de cartón",13/08/2017,,2,0
 "XHG","Hogshead",13/08/2017,,2,0
 "XHN","Gancho",13/08/2017,,2,0
 "XHR","Cesto",13/08/2017,,2,0
 "XIA","Paquete con pantalla y de madera",13/08/2017,,2,0
-"XIB","Paquete  con pantalla y de cartón",13/08/2017,,2,0
+"XIB","Paquete con pantalla y de cartón",13/08/2017,,2,0
 "XIC","Paquete con pantalla y de plástico",13/08/2017,,2,0
 "XID","Paquete con pantalla y de metal",13/08/2017,,2,0
 "XIE","Paquete de mostrador.",13/08/2017,,2,0
@@ -2192,7 +2192,7 @@
 "XIK","Paquete de cartón con los agujeros para botellas",13/08/2017,,2,0
 "XIL","Bandeja rígida con tapa y apilable (CEN TS 14482: 2002)",13/08/2017,,2,0
 "XIN","Lingote",13/08/2017,,2,0
-"XIZ","Lingotes  con correas/ agrupados",13/08/2017,,2,0
+"XIZ","Lingotes con correas/ agrupados",13/08/2017,,2,0
 "XJB","Bolsa jumbo",13/08/2017,,2,0
 "XJC","Bidón rectangular",13/08/2017,,2,0
 "XJG","Jarra",13/08/2017,,2,0
@@ -2206,7 +2206,7 @@
 "XLT","Lote",13/08/2017,,2,0
 "XLU","Caja de arrastre",13/08/2017,,2,0
 "XLV","Contenedor pequeño",13/08/2017,,2,0
-"XLZ","Registros  con fleje/ agrupados/ armados",13/08/2017,,2,0
+"XLZ","Registros con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XMA","Cajón metálico",13/08/2017,,2,0
 "XMB","Múltiplo de bolsas",13/08/2017,,2,0
 "XMC","Cajón para leche",13/08/2017,,2,0
@@ -2255,7 +2255,7 @@
 "XPY","Placas con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XPZ","Tablones con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XQA","Tambor de acero con cabeza no desmontable",13/08/2017,,2,0
-"XQB","Tambor de  acero con cabeza extraíble",13/08/2017,,2,0
+"XQB","Tambor de acero con cabeza extraíble",13/08/2017,,2,0
 "XQC","Tambor de aluminio con cabeza no extraíble",13/08/2017,,2,0
 "XQD","Tambor de aluminio con cabeza extraíble",13/08/2017,,2,0
 "XQF","Tambor, plástico con cabeza no desmontable",13/08/2017,,2,0
@@ -2277,7 +2277,7 @@
 "XRL","Carrete",13/08/2017,,2,0
 "XRO","Rollo",13/08/2017,,2,0
 "XRT","Red Roja",13/08/2017,,2,0
-"XRZ","Varillas  con fleje/ agrupados/ armados",13/08/2017,,2,0
+"XRZ","Varillas con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XSA","Saco",13/08/2017,,2,0
 "XSB","Losa",13/08/2017,,2,0
 "XSC","Cajón poco profundo",13/08/2017,,2,0
@@ -2295,7 +2295,7 @@
 "XSV","Sobre de acero",13/08/2017,,2,0
 "XSW","Envoltorio",13/08/2017,,2,0
 "XSY","Manga",13/08/2017,,2,0
-"XSZ","Hojas  con fleje/ agrupados/ armados",13/08/2017,,2,0
+"XSZ","Hojas con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XT1","Tableta",13/08/2017,,2,0
 "XTB","Tina",13/08/2017,,2,0
 "XTC","Caja para té",13/08/2017,,2,0
@@ -2313,7 +2313,7 @@
 "XTV","Tubo con boquilla",13/08/2017,,2,0
 "XTW","Pallet tricapa",13/08/2017,,2,0
 "XTY","Tanque cilíndrico",13/08/2017,,2,0
-"XTZ","Tubos  con fleje/ agrupados/ armados",13/08/2017,,2,0
+"XTZ","Tubos con fleje/ agrupados/ armados",13/08/2017,,2,0
 "XUC","Sin empaque",13/08/2017,,2,0
 "XUN","Unidad",13/08/2017,,2,0
 "XVA","Tanque",13/08/2017,,2,0
