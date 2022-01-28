@@ -5,7 +5,6 @@ Librería para crear archivos xml válidos para la facturación, utilizando la e
 ## Licencia
 
 Este proyecto esta bajo licencia GPL v2.
-
 Eres libre de copiar, usar, modificar y contribuir.
 
 ## Donaciones
@@ -22,9 +21,7 @@ Si te es útil el proyecto, considera la donación para apoyar este trabajo.
 - php-xsl
 
 ## Autor
-Mario Oyorzabal Salgado
-
-tuxsoul@tuxsoul.com
+Mario Oyorzabal Salgado (tuxsoul@tuxsoul.com)
 
 ## TODO
 - Validaciones
