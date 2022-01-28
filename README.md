@@ -9,9 +9,8 @@ Eres libre de copiar, usar, modificar y contribuir.
 
 ## Donaciones
 
-Si te es útil el proyecto, considera la donación para apoyar este trabajo.
-
-[![bitcoin](https://img.shields.io/badge/donation-bitcoin-yellow.svg)](https://coffee.tuxsoul.com)
+Considera realizar una donación para apoyar este trabajo.
+https://coffee.tuxsoul.com
 
 ## Requerimientos
 - php
